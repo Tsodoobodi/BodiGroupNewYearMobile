@@ -6,21 +6,29 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:import": "tsx scripts/import-guests.ts",
+    "db:reset": "tsx scripts/reset-db.ts"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "html5-qrcode": "^2.3.8",
     "next": "16.0.10",
     "react": "19.2.1",
+    "react-custom-roulette": "^1.4.1",
     "react-dom": "19.2.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/mssql": "^9.1.8",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
