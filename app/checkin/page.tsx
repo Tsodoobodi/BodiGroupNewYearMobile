@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface GuestInfo {
   ft_code: string;
@@ -347,8 +348,14 @@ export default function CheckInPage() {
       <div className="relative z-10 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-10 max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-block p-4 bg-linear-to-br from-yellow-400 to-orange-500 rounded-2xl mb-4 animate-bounce-slow">
-            <span className="text-5xl">🎊</span>
+          <div className="inline-block p-4 bg-white rounded-2xl mb-4 animate-bounce-slow">
+            <Image
+              src="/images/logosolo.png"
+              alt="logo"
+              width={80}
+              height={80}
+              className="animate-spin-slow"
+            />
           </div>
           <h1 className="text-4xl md:text-5xl font-black bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
             SPHERE NIGHT
