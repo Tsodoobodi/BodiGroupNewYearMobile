@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 interface GuestInfo {
   ft_code: string;
@@ -391,22 +392,12 @@ export default function CheckInPage() {
             )}
           </div>
           <button
-            onClick={() => router.push("/")}
-            className="w-full bg-linear-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold py-5 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl flex items-center justify-center gap-2 text-lg"
+            onClick={() => {
+              console.log("Navigating to home...");
+              window.location.href = "/";
+            }}
+            className="relative h-14 z-50 w-full bg-slate-500 text-white font-bold py-5 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center gap-3 text-lg shadow-xl"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
-            </svg>
             Буцах
           </button>
         </div>
