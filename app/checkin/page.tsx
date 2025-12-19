@@ -1,7 +1,7 @@
 // app/checkin/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -12,7 +12,7 @@ interface GuestInfo {
   last_name: string;
   mobile_phone: string;
   desk_no: string;
-  is_checked_in: boolean; // ← Нэмэх
+  is_checked_in: boolean;
 }
 
 export default function CheckInPage() {
@@ -24,6 +24,80 @@ export default function CheckInPage() {
   const [scanning, setScanning] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const router = useRouter();
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // ✅ FIX: Generate random values once and memoize them
+  const snowflakes = useMemo(
+    () =>
+      Array.from({ length: 50 }, () => ({
+        left: Math.random() * 100,
+        top: -(Math.random() * 20),
+        size: Math.random() * 15 + 10,
+        delay: Math.random() * 8,
+        duration: Math.random() * 8 + 8,
+        opacity: Math.random() * 0.7 + 0.3,
+      })),
+    []
+  );
+
+  const trees = useMemo(
+    () =>
+      Array.from({ length: 4 }, () => ({
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        size: Math.random() * 25 + 35,
+        delay: Math.random() * 4,
+        duration: Math.random() * 6 + 10,
+      })),
+    []
+  );
+
+  const stars = useMemo(
+    () =>
+      Array.from({ length: 12 }, () => ({
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        size: Math.random() * 15 + 12,
+        delay: Math.random() * 2,
+        duration: Math.random() * 2 + 2,
+      })),
+    []
+  );
+
+  const gifts = useMemo(
+    () =>
+      Array.from({ length: 6 }, () => ({
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        size: Math.random() * 20 + 25,
+        delay: Math.random() * 3,
+        duration: Math.random() * 5 + 7,
+      })),
+    []
+  );
+
+  const confettiParticles = useMemo(
+    () =>
+      Array.from({ length: 120 }, () => ({
+        left: Math.random() * 100,
+        delay: Math.random() * 2,
+        duration: Math.random() * 2 + 2,
+        color: [
+          "#FFD700",
+          "#FF1493",
+          "#00CED1",
+          "#FF4500",
+          "#32CD32",
+          "#FF69B4",
+        ][Math.floor(Math.random() * 6)],
+      })),
+    []
+  );
 
   // QR Scanner
   useEffect(() => {
@@ -117,30 +191,91 @@ export default function CheckInPage() {
   // Success Page
   if (confirmed) {
     return (
-      <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center p-4">
-        {/* Animated Background Shapes */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse delay-700"></div>
+      <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-900 via-purple-800 to-red-700 flex items-center justify-center p-4">
+        {/* ❄️ SNOWFLAKES */}
+        {isMounted && (
+          <div className="fixed inset-0 pointer-events-none z-0">
+            {snowflakes.map((flake, i) => (
+              <div
+                key={`snow-${i}`}
+                className="absolute snowflake"
+                style={{
+                  left: `${flake.left}%`,
+                  top: `${flake.top}px`,
+                  fontSize: `${flake.size}px`,
+                  animationDelay: `${flake.delay}s`,
+                  animationDuration: `${flake.duration}s`,
+                  opacity: flake.opacity,
+                }}
+              >
+                ❄️
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* 🎄 TREES */}
+        {isMounted && (
+          <div className="fixed inset-0 pointer-events-none z-0">
+            {trees.map((tree, i) => (
+              <div
+                key={`tree-${i}`}
+                className="absolute floating-tree"
+                style={{
+                  left: `${tree.left}%`,
+                  top: `${tree.top}%`,
+                  fontSize: `${tree.size}px`,
+                  animationDelay: `${tree.delay}s`,
+                  animationDuration: `${tree.duration}s`,
+                }}
+              >
+                🎄
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ⭐ STARS */}
+        {isMounted && (
+          <div className="fixed inset-0 pointer-events-none z-0">
+            {stars.map((star, i) => (
+              <div
+                key={`star-${i}`}
+                className="absolute floating-star"
+                style={{
+                  left: `${star.left}%`,
+                  top: `${star.top}%`,
+                  fontSize: `${star.size}px`,
+                  animationDelay: `${star.delay}s`,
+                  animationDuration: `${star.duration}s`,
+                }}
+              >
+                ⭐
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ✨ GLOWING LIGHTS */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <div className="absolute top-20 left-20 w-64 h-64 bg-red-500/20 rounded-full blur-3xl animate-glow-pulse"></div>
+          <div className="absolute top-40 right-40 w-80 h-80 bg-green-500/20 rounded-full blur-3xl animate-glow-pulse-delay-1"></div>
+          <div className="absolute bottom-32 left-1/4 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-glow-pulse-delay-2"></div>
+          <div className="absolute bottom-20 right-1/3 w-64 h-64 bg-yellow-500/20 rounded-full blur-3xl animate-glow-pulse-delay-3"></div>
         </div>
 
-        {/* Confetti Effect */}
-        {showConfetti && (
-          <div className="absolute inset-0 pointer-events-none">
-            {[...Array(50)].map((_, i) => (
+        {/* 🎊 Confetti Effect */}
+        {showConfetti && isMounted && (
+          <div className="absolute inset-0 pointer-events-none z-40">
+            {confettiParticles.map((particle, i) => (
               <div
                 key={i}
                 className="confetti"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 3}s`,
-                  backgroundColor: [
-                    "#FFD700",
-                    "#FF69B4",
-                    "#00CED1",
-                    "#FF4500",
-                    "#32CD32",
-                  ][Math.floor(Math.random() * 5)],
+                  left: `${particle.left}%`,
+                  animationDelay: `${particle.delay}s`,
+                  animationDuration: `${particle.duration}s`,
+                  backgroundColor: particle.color,
                 }}
               />
             ))}
@@ -148,12 +283,12 @@ export default function CheckInPage() {
         )}
 
         {/* Success Card */}
-        <div className="relative z-10 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-12 max-w-lg w-full text-center animate-scale-in">
+        <div className="relative z-10 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-12 max-w-lg w-full text-center animate-scale-in border-4 border-white/30 shadow-glow-success">
           {/* Success Icon */}
           <div className="mb-6 relative">
-            <div className="mx-auto w-24 h-24 bg-linear-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center animate-bounce-once">
+            <div className="mx-auto w-28 h-28 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center animate-bounce-celebration shadow-glow-green">
               <svg
-                className="w-14 h-14 text-white"
+                className="w-16 h-16 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -166,33 +301,45 @@ export default function CheckInPage() {
                 />
               </svg>
             </div>
-            <div className="absolute inset-0 bg-green-400/30 rounded-full blur-xl animate-pulse"></div>
+            <div className="absolute inset-0 bg-green-400/40 rounded-full blur-2xl animate-pulse"></div>
+            <div className="absolute -top-2 -right-2 text-4xl animate-spin-slow">
+              ⭐
+            </div>
+            <div className="absolute -bottom-2 -left-2 text-4xl animate-spin-slow-reverse">
+              🎁
+            </div>
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl md:text-5xl font-black bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2 animate-fade-in-up">
-            Тавтай морил!
+          <h1 className="text-5xl md:text-6xl font-black mb-3 animate-fade-in-up christmas-title-success">
+            🎊 Тавтай морил! 🎉
           </h1>
-          <p className="text-lg text-gray-600 mb-8 animate-fade-in-up delay-100">
+          <p className="text-xl text-gray-600 mb-8 animate-fade-in-up delay-100 font-semibold">
             Таныг амжилттай бүртгэлээ
           </p>
 
           {/* Info Cards */}
           <div className="space-y-4 mb-8">
-            <div className="bg-linear-to-r from-blue-50 to-indigo-50 border-2 border-indigo-200 rounded-2xl p-6 animate-fade-in-up delay-200">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-100 border-3 border-indigo-300 rounded-2xl p-6 animate-fade-in-up delay-200 shadow-lg hover:shadow-xl transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-gray-600 font-medium">
-                  Ширээний дугаар
-                </span>
-                <span className="text-3xl font-black text-indigo-600">
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl">🪑</span>
+                  <span className="text-gray-700 font-bold">
+                    Ширээний дугаар
+                  </span>
+                </div>
+                <span className="text-4xl font-black text-indigo-600 animate-pulse">
                   {guestInfo?.desk_no}
                 </span>
               </div>
             </div>
-            <div className="bg-linear-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-2xl p-6 animate-fade-in-up delay-300">
+            <div className="bg-gradient-to-r from-purple-50 to-pink-100 border-3 border-purple-300 rounded-2xl p-6 animate-fade-in-up delay-300 shadow-lg hover:shadow-xl transition-all">
               <div className="flex items-center justify-between">
-                <span className="text-gray-600 font-medium">Таны код</span>
-                <span className="text-2xl font-bold text-purple-600 font-mono">
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl">🎫</span>
+                  <span className="text-gray-700 font-bold">Таны код</span>
+                </div>
+                <span className="text-2xl font-black text-purple-600 font-mono">
                   {guestInfo?.ft_code}
                 </span>
               </div>
@@ -200,10 +347,10 @@ export default function CheckInPage() {
           </div>
 
           {/* Success Message */}
-          <div className="bg-linear-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-2xl p-6 mb-8 animate-fade-in-up delay-400">
-            <div className="flex items-center justify-center gap-3">
+          <div className="bg-gradient-to-r from-green-50 to-emerald-100 border-3 border-green-400 rounded-2xl p-6 mb-8 animate-fade-in-up delay-400 shadow-lg">
+            <div className="flex items-center justify-center gap-3 mb-3">
               <svg
-                className="w-6 h-6 text-green-600"
+                className="w-7 h-7 text-green-600 animate-bounce"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -213,8 +360,8 @@ export default function CheckInPage() {
                   clipRule="evenodd"
                 />
               </svg>
-              <p className="text-green-700 font-semibold">
-                Сугалаанд амжилттай бүртгэгдлээ!
+              <p className="text-green-700 font-bold text-lg">
+                🎁 Сугалаанд амжилттай бүртгэгдлээ! 🎄
               </p>
             </div>
             {process.env.NODE_ENV === "development" && (
@@ -237,7 +384,7 @@ export default function CheckInPage() {
                     alert("Алдаа гарлаа");
                   }
                 }}
-                className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-xl transition-all"
+                className="mt-4 w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-105 shadow-lg"
               >
                 🔄 Reset хийх (Dev only)
               </button>
@@ -245,8 +392,21 @@ export default function CheckInPage() {
           </div>
           <button
             onClick={() => router.push("/")}
-            className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105"
+            className="w-full bg-linear-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold py-5 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl flex items-center justify-center gap-2 text-lg"
           >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
             Буцах
           </button>
         </div>
@@ -254,22 +414,23 @@ export default function CheckInPage() {
         <style jsx>{`
           @keyframes confetti-fall {
             to {
-              transform: translateY(100vh) rotate(360deg);
+              transform: translateY(100vh) rotate(720deg);
             }
           }
 
           .confetti {
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             top: -10px;
-            animation: confetti-fall 3s linear forwards;
+            animation: confetti-fall linear forwards;
+            border-radius: 50%;
           }
 
           @keyframes scale-in {
             from {
               opacity: 0;
-              transform: scale(0.9);
+              transform: scale(0.8);
             }
             to {
               opacity: 1;
@@ -277,20 +438,26 @@ export default function CheckInPage() {
             }
           }
 
-          @keyframes bounce-once {
+          @keyframes bounce-celebration {
             0%,
             100% {
-              transform: translateY(0);
+              transform: translateY(0) scale(1);
+            }
+            25% {
+              transform: translateY(-15px) scale(1.1);
             }
             50% {
-              transform: translateY(-20px);
+              transform: translateY(-30px) scale(1);
+            }
+            75% {
+              transform: translateY(-15px) scale(1.1);
             }
           }
 
           @keyframes fade-in-up {
             from {
               opacity: 0;
-              transform: translateY(20px);
+              transform: translateY(30px);
             }
             to {
               opacity: 1;
@@ -299,35 +466,165 @@ export default function CheckInPage() {
           }
 
           .animate-scale-in {
-            animation: scale-in 0.5s ease-out;
+            animation: scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
           }
 
-          .animate-bounce-once {
-            animation: bounce-once 1s ease-in-out;
+          .animate-bounce-celebration {
+            animation: bounce-celebration 1.5s ease-in-out infinite;
           }
 
           .animate-fade-in-up {
-            animation: fade-in-up 0.6s ease-out;
+            animation: fade-in-up 0.8s ease-out;
+          }
+
+          .christmas-title-success {
+            background: linear-gradient(
+              45deg,
+              #ef4444,
+              #22c55e,
+              #3b82f6,
+              #eab308,
+              #ef4444
+            );
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 4s ease infinite;
           }
 
           .delay-100 {
             animation-delay: 0.1s;
           }
-
           .delay-200 {
             animation-delay: 0.2s;
           }
-
           .delay-300 {
             animation-delay: 0.3s;
           }
-
           .delay-400 {
             animation-delay: 0.4s;
           }
-
           .delay-700 {
             animation-delay: 0.7s;
+          }
+
+          /* SHARED ANIMATIONS */
+          @keyframes snowfall {
+            0% {
+              transform: translateY(-10px) translateX(0) rotate(0deg);
+              opacity: 0;
+            }
+            10% {
+              opacity: 1;
+            }
+            90% {
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(100vh) translateX(100px) rotate(360deg);
+              opacity: 0;
+            }
+          }
+
+          .snowflake {
+            animation: snowfall linear infinite;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+          }
+
+          @keyframes float-tree {
+            0%,
+            100% {
+              transform: translateY(0) translateX(0) rotate(-10deg);
+            }
+            50% {
+              transform: translateY(-40px) translateX(-20px) rotate(10deg);
+            }
+          }
+
+          .floating-tree {
+            animation: float-tree ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.6));
+          }
+
+          @keyframes twinkle-star {
+            0%,
+            100% {
+              transform: scale(1) rotate(0deg);
+              opacity: 0.8;
+            }
+            50% {
+              transform: scale(1.3) rotate(180deg);
+              opacity: 1;
+            }
+          }
+
+          .floating-star {
+            animation: twinkle-star ease-in-out infinite;
+            filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.8));
+          }
+
+          @keyframes glow-pulse {
+            0%,
+            100% {
+              transform: scale(1);
+              opacity: 0.5;
+            }
+            50% {
+              transform: scale(1.2);
+              opacity: 0.8;
+            }
+          }
+
+          .animate-glow-pulse {
+            animation: glow-pulse 4s ease-in-out infinite;
+          }
+          .animate-glow-pulse-delay-1 {
+            animation: glow-pulse 4s ease-in-out infinite;
+            animation-delay: 1s;
+          }
+          .animate-glow-pulse-delay-2 {
+            animation: glow-pulse 4s ease-in-out infinite;
+            animation-delay: 2s;
+          }
+          .animate-glow-pulse-delay-3 {
+            animation: glow-pulse 4s ease-in-out infinite;
+            animation-delay: 3s;
+          }
+
+          @keyframes spin-slow {
+            from {
+              transform: rotate(0deg);
+            }
+            to {
+              transform: rotate(360deg);
+            }
+          }
+
+          .animate-spin-slow {
+            animation: spin-slow 8s linear infinite;
+          }
+          .animate-spin-slow-reverse {
+            animation: spin-slow 8s linear infinite reverse;
+          }
+
+          @keyframes gradient-shift {
+            0%,
+            100% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+          }
+
+          .shadow-glow-success {
+            box-shadow: 0 0 60px rgba(34, 197, 94, 0.3),
+              0 0 100px rgba(147, 51, 234, 0.2);
+          }
+
+          .shadow-glow-green {
+            box-shadow: 0 0 40px rgba(34, 197, 94, 0.5);
           }
         `}</style>
       </div>
@@ -336,40 +633,137 @@ export default function CheckInPage() {
 
   // Main Check-in Page
   return (
-    <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-blue-600 via-purple-600 to-pink-500 flex items-center justify-center p-4">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-400/30 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-pink-400/30 rounded-full blur-3xl animate-pulse delay-700"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-900 via-purple-800 to-red-700 flex items-center justify-center p-4">
+      {/* ❄️ SNOWFLAKES */}
+      {isMounted && (
+        <div className="fixed inset-0 pointer-events-none z-0">
+          {snowflakes.map((flake, i) => (
+            <div
+              key={`snow-${i}`}
+              className="absolute snowflake"
+              style={{
+                left: `${flake.left}%`,
+                top: `${flake.top}px`,
+                fontSize: `${flake.size}px`,
+                animationDelay: `${flake.delay}s`,
+                animationDuration: `${flake.duration}s`,
+                opacity: flake.opacity,
+              }}
+            >
+              ❄️
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 🎄 TREES */}
+      {isMounted && (
+        <div className="fixed inset-0 pointer-events-none z-0">
+          {trees.map((tree, i) => (
+            <div
+              key={`tree-${i}`}
+              className="absolute floating-tree"
+              style={{
+                left: `${tree.left}%`,
+                top: `${tree.top}%`,
+                fontSize: `${tree.size}px`,
+                animationDelay: `${tree.delay}s`,
+                animationDuration: `${tree.duration}s`,
+              }}
+            >
+              🎄
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ⭐ STARS */}
+      {isMounted && (
+        <div className="fixed inset-0 pointer-events-none z-0">
+          {stars.map((star, i) => (
+            <div
+              key={`star-${i}`}
+              className="absolute floating-star"
+              style={{
+                left: `${star.left}%`,
+                top: `${star.top}%`,
+                fontSize: `${star.size}px`,
+                animationDelay: `${star.delay}s`,
+                animationDuration: `${star.duration}s`,
+              }}
+            >
+              ⭐
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 🎁 GIFTS */}
+      {isMounted && (
+        <div className="fixed inset-0 pointer-events-none z-0">
+          {gifts.map((gift, i) => (
+            <div
+              key={`gift-${i}`}
+              className="absolute floating-gift"
+              style={{
+                left: `${gift.left}%`,
+                top: `${gift.top}%`,
+                fontSize: `${gift.size}px`,
+                animationDelay: `${gift.delay}s`,
+                animationDuration: `${gift.duration}s`,
+              }}
+            >
+              🎁
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ✨ GLOWING LIGHTS */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-20 left-20 w-64 h-64 bg-red-500/20 rounded-full blur-3xl animate-glow-pulse"></div>
+        <div className="absolute top-40 right-40 w-80 h-80 bg-green-500/20 rounded-full blur-3xl animate-glow-pulse-delay-1"></div>
+        <div className="absolute bottom-32 left-1/4 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-glow-pulse-delay-2"></div>
+        <div className="absolute bottom-20 right-1/3 w-64 h-64 bg-yellow-500/20 rounded-full blur-3xl animate-glow-pulse-delay-3"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-glow-pulse"></div>
       </div>
 
       {/* Main Card */}
-      <div className="relative z-10 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-10 max-w-md w-full">
+      <div className="relative z-10 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-10 max-w-md w-full border-4 border-white/30 shadow-glow-multi">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-block p-4 bg-white rounded-2xl mb-4 animate-bounce-slow">
-            <Image
-              src="/images/logosolo.png"
-              alt="logo"
-              width={80}
-              height={80}
-              className="animate-spin-slow"
-            />
+          <div className="inline-block relative mb-6">
+            <div className="p-4 bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl animate-float">
+              <Image
+                src="/images/logosolo.png"
+                alt="logo"
+                width={90}
+                height={90}
+                className="animate-rotate-slow"
+              />
+            </div>
+            <div className="absolute -top-2 -right-2 text-3xl animate-bounce">
+              🎄
+            </div>
+            <div className="absolute -bottom-2 -left-2 text-3xl animate-bounce delay-300">
+              ⭐
+            </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-black bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-            SPHERE NIGHT
+          <h1 className="text-5xl md:text-6xl font-black mb-2 christmas-title">
+            🎊 SPHERE NIGHT 🎉
           </h1>
+          <p className="text-gray-700 text-lg font-bold">
+            Бодь Групп Шинэ жилийн баяр
+          </p>
         </div>
 
         {!guestInfo ? (
           <>
             {!scanning ? (
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Input Field */}
                 <div className="relative">
-                  <label className="block text-sm font-bold text-gray-700 mb-3 text-center">
-                    FT КОД ОРУУЛАНА УУ!
+                  <label className="block text-sm font-bold text-gray-700 mb-3 text-center bg-gradient-to-r from-purple-100 to-pink-100 py-2 px-4 rounded-xl border-2 border-purple-200">
+                    🎫 FT КОД ОРУУЛНА УУ!
                   </label>
                   <div className="relative">
                     <input
@@ -377,19 +771,18 @@ export default function CheckInPage() {
                       value={ftCode}
                       onChange={(e) => setFtCode(e.target.value)}
                       placeholder="FT0000"
-                      className="w-full px-6 py-4 border-3 border-gray-300 rounded-2xl focus:ring-4 focus:ring-purple-300 focus:border-purple-500 text-center text-2xl font-bold font-mono uppercase transition-all duration-300 shadow-lg"
+                      className="w-full px-6 py-5 border-3 border-purple-300 rounded-2xl focus:ring-4 focus:ring-purple-400 focus:border-purple-500 text-center text-3xl font-bold font-mono uppercase transition-all duration-300 shadow-lg hover:shadow-xl bg-gradient-to-br from-white to-purple-50"
                       required
                     />
-                    <div className="absolute inset-0 bg-linear-to-r from-purple-400/20 to-pink-400/20 rounded-2xl blur-xl -z-10"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-2xl blur-xl -z-10"></div>
                   </div>
                 </div>
 
-                {/* Error Message */}
                 {error && (
-                  <div className="bg-red-50 border-2 border-red-300 rounded-2xl p-4 animate-shake">
+                  <div className="bg-gradient-to-r from-red-50 to-red-100 border-3 border-red-400 rounded-2xl p-4 animate-shake shadow-lg">
                     <div className="flex items-center gap-3">
                       <svg
-                        className="w-6 h-6 text-red-600 shrink-0"
+                        className="w-7 h-7 text-red-600 shrink-0 animate-bounce"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -399,21 +792,20 @@ export default function CheckInPage() {
                           clipRule="evenodd"
                         />
                       </svg>
-                      <p className="text-red-700 font-semibold">{error}</p>
+                      <p className="text-red-700 font-bold">{error}</p>
                     </div>
                   </div>
                 )}
 
-                {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={loading || !ftCode}
-                  className="w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl disabled:scale-100 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-5 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl disabled:scale-100 disabled:cursor-not-allowed flex items-center justify-center gap-3 text-lg shadow-xl"
                 >
                   {loading ? (
                     <>
                       <svg
-                        className="animate-spin h-6 w-6"
+                        className="animate-spin h-7 w-7"
                         fill="none"
                         viewBox="0 0 24 24"
                       >
@@ -436,7 +828,7 @@ export default function CheckInPage() {
                   ) : (
                     <>
                       <svg
-                        className="w-6 h-6"
+                        className="w-7 h-7"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -444,7 +836,7 @@ export default function CheckInPage() {
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          strokeWidth={2}
+                          strokeWidth={2.5}
                           d="M13 7l5 5m0 0l-5 5m5-5H6"
                         />
                       </svg>
@@ -457,11 +849,11 @@ export default function CheckInPage() {
               <div className="space-y-4">
                 <div
                   id="qr-reader"
-                  className="rounded-2xl overflow-hidden shadow-xl"
+                  className="rounded-2xl overflow-hidden shadow-xl border-4 border-purple-300"
                 ></div>
                 <button
                   onClick={() => setScanning(false)}
-                  className="w-full bg-linear-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105"
+                  className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold py-5 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl"
                 >
                   Болих
                 </button>
@@ -470,12 +862,10 @@ export default function CheckInPage() {
           </>
         ) : (
           <div className="space-y-6 animate-fade-in-up">
-            {/* Guest Info Card */}
-            {/* Guest Info Card */}
-            <div className="bg-linear-to-br from-blue-50 to-indigo-50 border-2 border-indigo-200 rounded-2xl p-6 shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center flex items-center justify-center gap-2">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-100 border-3 border-indigo-300 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all">
+              <h2 className="text-2xl font-bold text-gray-800 mb-5 text-center flex items-center justify-center gap-2">
                 <svg
-                  className="w-7 h-7 text-indigo-600"
+                  className="w-8 h-8 text-indigo-600"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -488,39 +878,48 @@ export default function CheckInPage() {
                 Таны мэдээлэл
               </h2>
               <div className="space-y-4">
-                <div className="flex justify-between items-center pb-3 border-b border-indigo-200">
-                  <span className="text-gray-600 font-medium">Код:</span>
-                  <span className="text-xl font-bold text-indigo-600 font-mono">
+                <div className="flex justify-between items-center pb-3 border-b-2 border-indigo-200">
+                  <span className="text-gray-600 font-bold flex items-center gap-2">
+                    <span className="text-2xl">🎫</span> Код:
+                  </span>
+                  <span className="text-xl font-black text-indigo-600 font-mono">
                     {guestInfo.ft_code}
                   </span>
                 </div>
-                <div className="flex justify-between items-center pb-3 border-b border-indigo-200">
-                  <span className="text-gray-600 font-medium">Нэр:</span>
-                  <span className="text-lg font-semibold text-gray-800">
+                <div className="flex justify-between items-center pb-3 border-b-2 border-indigo-200">
+                  <span className="text-gray-600 font-bold flex items-center gap-2">
+                    <span className="text-2xl">👤</span> Нэр:
+                  </span>
+                  <span className="text-lg font-bold text-gray-800">
                     {guestInfo.first_name} {guestInfo.last_name}
                   </span>
                 </div>
                 {guestInfo.mobile_phone && (
-                  <div className="flex justify-between items-center pb-3 border-b border-indigo-200">
-                    <span className="text-gray-600 font-medium">Утас:</span>
-                    <span className="text-lg font-semibold text-gray-800">
+                  <div className="flex justify-between items-center pb-3 border-b-2 border-indigo-200">
+                    <span className="text-gray-600 font-bold flex items-center gap-2">
+                      <span className="text-2xl">📱</span> Утас:
+                    </span>
+                    <span className="text-lg font-bold text-gray-800">
                       {guestInfo.mobile_phone}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600 font-medium">Ширээ:</span>
-                  <span className="text-3xl font-black text-indigo-600">
+                  <span className="text-gray-600 font-bold flex items-center gap-2">
+                    <span className="text-2xl">🪑</span> Ширээ:
+                  </span>
+                  <span className="text-4xl font-black text-indigo-600 animate-pulse">
                     {guestInfo.desk_no}
                   </span>
                 </div>
               </div>
             </div>
+
             {guestInfo.is_checked_in && (
-              <div className="bg-yellow-50 border-2 border-yellow-400 rounded-2xl p-6 animate-fade-in-up">
+              <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 border-3 border-yellow-400 rounded-2xl p-6 animate-fade-in-up shadow-lg">
                 <div className="flex items-start gap-3">
                   <svg
-                    className="w-6 h-6 text-yellow-600 shrink-0 mt-0.5"
+                    className="w-7 h-7 text-yellow-600 shrink-0 mt-0.5 animate-bounce"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -531,10 +930,10 @@ export default function CheckInPage() {
                     />
                   </svg>
                   <div>
-                    <p className="text-yellow-800 font-bold mb-1">
-                      Анхааруулга
+                    <p className="text-yellow-800 font-black mb-1 text-lg">
+                      ⚠️ Анхааруулга
                     </p>
-                    <p className="text-yellow-700 text-sm">
+                    <p className="text-yellow-700 font-semibold">
                       Та аль хэдийн бүртгүүлсэн байна.
                     </p>
                   </div>
@@ -542,12 +941,11 @@ export default function CheckInPage() {
               </div>
             )}
 
-            {/* Error Message */}
             {error && (
-              <div className="bg-red-50 border-2 border-red-300 rounded-2xl p-4 animate-shake">
+              <div className="bg-gradient-to-r from-red-50 to-red-100 border-3 border-red-400 rounded-2xl p-4 animate-shake shadow-lg">
                 <div className="flex items-center gap-3">
                   <svg
-                    className="w-6 h-6 text-red-600 shrink-0"
+                    className="w-7 h-7 text-red-600 shrink-0 animate-bounce"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -557,12 +955,11 @@ export default function CheckInPage() {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <p className="text-red-700 font-semibold">{error}</p>
+                  <p className="text-red-700 font-bold">{error}</p>
                 </div>
               </div>
             )}
 
-            {/* Action Buttons */}
             <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={() => {
@@ -570,25 +967,24 @@ export default function CheckInPage() {
                   setFtCode("");
                   setError("");
                 }}
-                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+                className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-5 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl shadow-lg"
               >
                 Буцах
               </button>
 
-              {/* ✅ Бүртгүүлсэн бол товч идэвхгүй */}
               <button
                 onClick={handleConfirm}
                 disabled={loading || guestInfo.is_checked_in}
-                className={`font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:shadow-xl flex items-center justify-center gap-2 ${
+                className={`font-bold py-5 px-6 rounded-2xl transition-all duration-300 transform hover:shadow-xl flex items-center justify-center gap-2 shadow-lg ${
                   guestInfo.is_checked_in
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white hover:scale-105"
+                    ? "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600 cursor-not-allowed"
+                    : "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white hover:scale-105"
                 }`}
               >
                 {loading ? (
                   <>
                     <svg
-                      className="animate-spin h-5 w-5"
+                      className="animate-spin h-6 w-6"
                       fill="none"
                       viewBox="0 0 24 24"
                     >
@@ -647,18 +1043,129 @@ export default function CheckInPage() {
       </div>
 
       <style jsx>{`
-        @keyframes bounce-slow {
+        /* SHARED ANIMATIONS */
+        @keyframes snowfall {
+          0% {
+            transform: translateY(-10px) translateX(0) rotate(0deg);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100vh) translateX(100px) rotate(360deg);
+            opacity: 0;
+          }
+        }
+
+        .snowflake {
+          animation: snowfall linear infinite;
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes float-tree {
+          0%,
+          100% {
+            transform: translateY(0) translateX(0) rotate(-10deg);
+          }
+          50% {
+            transform: translateY(-40px) translateX(-20px) rotate(10deg);
+          }
+        }
+
+        .floating-tree {
+          animation: float-tree ease-in-out infinite;
+          filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.6));
+        }
+
+        @keyframes twinkle-star {
+          0%,
+          100% {
+            transform: scale(1) rotate(0deg);
+            opacity: 0.8;
+          }
+          50% {
+            transform: scale(1.3) rotate(180deg);
+            opacity: 1;
+          }
+        }
+
+        .floating-star {
+          animation: twinkle-star ease-in-out infinite;
+          filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.8));
+        }
+
+        @keyframes float-gift {
+          0%,
+          100% {
+            transform: translateY(0) rotate(0deg) scale(1);
+          }
+          50% {
+            transform: translateY(-30px) rotate(-10deg) scale(1.1);
+          }
+        }
+
+        .floating-gift {
+          animation: float-gift ease-in-out infinite;
+          filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.6));
+        }
+
+        @keyframes glow-pulse {
+          0%,
+          100% {
+            transform: scale(1);
+            opacity: 0.5;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 0.8;
+          }
+        }
+
+        .animate-glow-pulse {
+          animation: glow-pulse 4s ease-in-out infinite;
+        }
+        .animate-glow-pulse-delay-1 {
+          animation: glow-pulse 4s ease-in-out infinite;
+          animation-delay: 1s;
+        }
+        .animate-glow-pulse-delay-2 {
+          animation: glow-pulse 4s ease-in-out infinite;
+          animation-delay: 2s;
+        }
+        .animate-glow-pulse-delay-3 {
+          animation: glow-pulse 4s ease-in-out infinite;
+          animation-delay: 3s;
+        }
+
+        @keyframes float {
           0%,
           100% {
             transform: translateY(0);
           }
           50% {
-            transform: translateY(-10px);
+            transform: translateY(-15px);
           }
         }
 
-        .animate-bounce-slow {
-          animation: bounce-slow 2s ease-in-out infinite;
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes rotate-slow {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        .animate-rotate-slow {
+          animation: rotate-slow 20s linear infinite;
         }
 
         @keyframes shake {
@@ -685,6 +1192,56 @@ export default function CheckInPage() {
           animation: shake 0.5s ease-in-out;
         }
 
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-fade-in-up {
+          animation: fade-in-up 0.6s ease-out;
+        }
+
+        .christmas-title {
+          background: linear-gradient(
+            45deg,
+            #ef4444,
+            #22c55e,
+            #3b82f6,
+            #eab308,
+            #ef4444
+          );
+          background-size: 300% 300%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: gradient-shift 4s ease infinite;
+          text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes gradient-shift {
+          0%,
+          100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+
+        .shadow-glow-multi {
+          box-shadow: 0 0 50px rgba(147, 51, 234, 0.3),
+            0 0 100px rgba(239, 68, 68, 0.2), 0 0 150px rgba(34, 197, 94, 0.2);
+        }
+
+        .delay-300 {
+          animation-delay: 0.3s;
+        }
         .delay-1000 {
           animation-delay: 1s;
         }
