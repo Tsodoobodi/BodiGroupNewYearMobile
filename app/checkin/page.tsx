@@ -720,16 +720,21 @@ export default function CheckInPage() {
       </div>
 
       {/* Main Card */}
-      <div className="relative z-10 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-10 max-w-md w-full border-4 border-white/30 shadow-glow-multi">
+      <div className="relative z-10 bg-white/80 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 md:p-12 max-w-md w-full border border-white/50 overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 via-purple-100/20 to-pink-100/20 blur-3xl"></div>
+          <div className="absolute top-0 left-0 w-72 h-72 bg-blue-300/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-300/30 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+        </div>
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-block relative mb-6">
-            <div className="p-4 bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl animate-float">
+            <div className="p-4 animate-float">
               <Image
-                src="/images/logosolo.png"
+                src="/images/modgif.gif"
                 alt="logo"
-                width={90}
-                height={90}
+                width={120}
+                height={120}
                 className="animate-rotate-slow"
               />
             </div>
@@ -740,10 +745,10 @@ export default function CheckInPage() {
               ⭐
             </div>
           </div>
-          <h1 className="text-5xl md:text-6xl font-black mb-2 christmas-title">
+          <h1 className="text-3xl md:text-4xl font-black mb-2 christmas-title">
             🎊 SPHERE NIGHT 🎉
           </h1>
-          <p className="text-gray-700 text-lg font-bold">
+          <p className="text-gray-700 text-md font-bold">
             Бодь Групп Шинэ жилийн баяр
           </p>
         </div>
@@ -835,6 +840,12 @@ export default function CheckInPage() {
                     </>
                   )}
                 </button>
+                <Link
+                  href="/directors"
+                  className="block text-center text-purple-700 font-semibold hover:underline"
+                >
+                  Зочид
+                </Link>
               </form>
             ) : (
               <div className="space-y-4">
@@ -1024,7 +1035,7 @@ export default function CheckInPage() {
                         d="M5 13l4 4L19 7"
                       />
                     </svg>
-                    Баталгаажуулах
+                    Би ирлээ
                   </>
                 )}
               </button>
