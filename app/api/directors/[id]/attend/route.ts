@@ -1,9 +1,9 @@
 // app/api/directors/[id]/attend/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { Pool } from '@neondatabase/serverless';
+import { NextRequest, NextResponse } from "next/server";
+import { Pool } from "@neondatabase/serverless";
 
-const pool = new Pool({ 
-  connectionString: process.env.DATABASE_URL 
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
 });
 
 export async function PATCH(
@@ -29,7 +29,7 @@ export async function PATCH(
 
     if (result.rows.length === 0) {
       return NextResponse.json(
-        { success: false, message: 'Зочин олдсонгүй' },
+        { success: false, message: "Зочин олдсонгүй" },
         { status: 404 }
       );
     }
@@ -37,12 +37,12 @@ export async function PATCH(
     return NextResponse.json({
       success: true,
       data: result.rows[0],
-      message: 'Амжилттай тэмдэглэгдлээ'
+      message: "Амжилттай тэмдэглэгдлээ",
     });
   } catch (error) {
-    console.error('Error marking attended:', error);
+    console.error("Error marking attended:", error);
     return NextResponse.json(
-      { success: false, message: 'Алдаа гарлаа' },
+      { success: false, message: "Алдаа гарлаа" },
       { status: 500 }
     );
   }
